@@ -1,5 +1,6 @@
 package com.crocheteer.crocheteer.data
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -20,6 +21,10 @@ interface YarnDao {
     @Transaction
     @Query("SELECT * from yarn_types")
     fun getAllYarnTypesWithColors(): Flow<List<YarnTypeWithColors>>
+
+    @Transaction
+    @Query("SELECT * from yarn_types")
+    fun getAllYarnTypesWithColorsPagingSource(): PagingSource<Int, YarnTypeWithColors>
 
     @Transaction
     @Query("SELECT * from yarn_types WHERE id = :yarnTypeId")

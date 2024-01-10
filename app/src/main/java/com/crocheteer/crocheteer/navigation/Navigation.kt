@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.crocheteer.crocheteer.screens.Greeting
+import com.crocheteer.crocheteer.screens.YarnStash
 import com.crocheteer.crocheteer.screens.SplashScreen
 
 @Composable
@@ -16,12 +16,10 @@ fun Navigation(){
     ){
         composable("splash_screen"){
             SplashScreen(navController = navController)
-
         }
 
         composable("main_screen"){
-            Greeting(name = "Hello, Crocheteer!", navController = navController)
-
+            YarnStash(navController = navController)
         }
     }
 

@@ -12,15 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.crocheteer.crocheteer.ui.components.ExpandableCard
+import com.crocheteer.crocheteer.ui.components.StashedYarnList
 import com.crocheteer.crocheteer.ui.components.TopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier, navController: NavController) {
+fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopBar()
         }
@@ -30,14 +30,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier, navController: NavCont
                 .padding(top = 100.dp)
                 .background(Color.Transparent)
         ) {
-            ExpandableCard()
+            StashedYarnList(modifier)
         }
     }
 
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    Greeting("test")
-//}
