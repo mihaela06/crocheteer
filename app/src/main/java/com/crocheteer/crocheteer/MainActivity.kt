@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.crocheteer.crocheteer.navigation.Navigation
 import com.crocheteer.crocheteer.ui.theme.CrocheteerTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,38 +31,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Crocheteer")
+                    Navigation()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
-    ) {
-        Box(
-            modifier = modifier
-                .align(Alignment.Center)
-                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
-                .padding(15.dp)
-        ) {
-            Text(
-                text = "Hello, $name!",
-                modifier = modifier
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CrocheteerTheme {
-        Greeting("Crocheteer")
-    }
-}
