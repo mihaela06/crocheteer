@@ -40,7 +40,7 @@ import com.crocheteer.crocheteer.ui.theme.Shapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard() {
+fun ExpandableCard(modifier: Modifier = Modifier) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -48,7 +48,7 @@ fun ExpandableCard() {
     )
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(15.dp)
             .animateContentSize(
@@ -65,12 +65,12 @@ fun ExpandableCard() {
 
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
             ) {
                 Box() {
@@ -78,19 +78,19 @@ fun ExpandableCard() {
                         Image(
                             painter = painterResource(id = R.mipmap.logo),
                             contentDescription = "SplashScreenLogo",
-                            modifier = Modifier.weight(1f)
+                            modifier = modifier.weight(1f)
                         )
                         Column(
-                            modifier = Modifier
+                            modifier = modifier
                                 .weight(2f)
                                 .padding(5.dp)
                                 .align(Alignment.CenterVertically),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(text = "text2")
-                            Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = modifier.height(5.dp))
                             Text(text = "text3")
-                            Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = modifier.height(5.dp))
                             Text(text = "text4")
                         }
                     }
@@ -100,13 +100,13 @@ fun ExpandableCard() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier
+                    modifier = modifier
                         .weight(7f)
                         .padding(5.dp),
                     text = "text5"
                 )
                 IconButton(
-                    modifier = Modifier
+                    modifier = modifier
                         .alpha(0.5f)
                         .weight(1f)
                         .rotate(rotationState),
@@ -117,7 +117,7 @@ fun ExpandableCard() {
                     )
                 }
                 IconButton(
-                    modifier = Modifier
+                    modifier = modifier
                         .alpha(0.5f)
                         .weight(1f)
                         .rotate(rotationState),
@@ -131,7 +131,7 @@ fun ExpandableCard() {
 
             if (expandableState) {
                 Row(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -140,20 +140,20 @@ fun ExpandableCard() {
                     Image(
                         painter = painterResource(id = R.mipmap.logo),
                         contentDescription = "SplashScreenLogo",
-                        modifier = Modifier.size(width = 50.dp, height = 50.dp)
+                        modifier = modifier.size(width = 50.dp, height = 50.dp)
                     )
                     // Container for text 9 and 10 to keep them together
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "text9",
-                            modifier = Modifier.padding(start = 5.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
+                            modifier = modifier.padding(start = 5.dp))
+                        Spacer(modifier = modifier.width(8.dp))
                         Text(text = "-")
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = modifier.width(8.dp))
                         Text(text = "text10")
                     }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = modifier.weight(1f))
                     Text(text = "text11")
                 }
             }
