@@ -55,7 +55,6 @@ fun YarnStashColumn(
             key = yarnStashPagingItems.itemKey { it.type.id },
         ) { index ->
             val stashedYarn = yarnStashPagingItems[index] ?: return@items
-            Log.d("YARN", "Loaded yarn type ${stashedYarn.type.id}")
             ExpandableCard()
         }
         item {
