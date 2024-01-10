@@ -5,6 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
+
 android {
     namespace = "com.crocheteer.crocheteer"
     compileSdk = 34
@@ -62,7 +63,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.paging:paging-compose:3.2.1")
 
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
