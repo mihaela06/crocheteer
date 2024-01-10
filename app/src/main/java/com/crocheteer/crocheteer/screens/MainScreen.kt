@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.crocheteer.crocheteer.ui.components.ExpandableCard
 import com.crocheteer.crocheteer.ui.components.TopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -31,20 +32,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier, navController: NavCont
     ) {
         Box(
             modifier = modifier
-                .fillMaxSize()
+                .padding(top = 100.dp)
                 .background(Color.Transparent)
         ) {
-            Box(
-                modifier = modifier
-                    .align(Alignment.Center)
-                    .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
-                    .padding(15.dp)
-            ) {
-                Text(
-                    text = "Hello, $name!",
-                    modifier = modifier
-                )
-            }
+//            Box(
+//                modifier = modifier
+//                    .align(Alignment.Center)
+//                    .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(20.dp))
+//                    .padding(15.dp)
+//            ) {
+//                Text(
+//                    text = "Hello, $name!",
+//                    modifier = modifier
+//                )
+//            }
+            ExpandableCard()
         }
     }
 
@@ -53,7 +55,5 @@ fun Greeting(name: String, modifier: Modifier = Modifier, navController: NavCont
 //@Preview(showBackground = true)
 //@Composable
 //fun GreetingPreview() {
-//    CrocheteerTheme {
-//        Greeting("Crocheteer")
-//    }
+//    Greeting("test")
 //}
