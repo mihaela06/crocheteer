@@ -55,7 +55,7 @@ fun YarnStashColumn(
             key = yarnStashPagingItems.itemKey { it.type.id },
         ) { index ->
             val stashedYarn = yarnStashPagingItems[index] ?: return@items
-            ExpandableCard()
+            ExpandableCard(stashedYarn)
         }
         item {
             if (yarnStashPagingItems.loadState.append is LoadState.Loading) {
