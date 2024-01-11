@@ -17,25 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-    private val ravelryApiUrl = "https://api.ravelry.com/"
-
-    private fun createRavelryApiServiceWithRetrofit(user: String, password: String) =
-        Retrofit.Builder()
-            .baseUrl(ravelryApiUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(
-                OkHttpClient.Builder()
-                    .addInterceptor(
-                        AuthInterceptor(
-                            user,
-                            password
-                        )
-                    )
-                    .build()
-            )
-            .build()
-            .create(YarnApiService::class.java)
-
     @Provides
     @Singleton
     fun provideRavelryApiService(@ApplicationContext context: Context): YarnApiService =
@@ -43,4 +24,18 @@ class NetworkModule {
             context.getString(R.string.ravelry_user),
             context.getString(R.string.ravelry_password),
         )
+
+    companion object {
+        private const val ravelryApiUrl = "https://api.ravelry.com/"
+
+        fun createRavelryApiServiceWithRetrofit(user: String, password: String): YarnApiService =
+            Retrofit.Builder().baseUrl(ravelryApiUrl)
+                .addConverterFactory(GsonConverterFactory.create()).client(
+                    OkHttpClient.Builder().addInterceptor(
+                        AuthInterceptor(
+                            user, password
+                        )
+                    ).build()
+                ).build().create(YarnApiService::class.java)
+    }
 }
