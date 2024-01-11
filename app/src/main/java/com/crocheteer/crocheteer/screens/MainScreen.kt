@@ -24,7 +24,7 @@ fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            TopBar()
+            TopBar("My Yarn Stash")
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {

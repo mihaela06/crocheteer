@@ -12,14 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(text: String) {
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "My Yarn Stash",
+                text = text,
                 fontFamily = FontFamily.Cursive,
                 fontWeight = FontWeight.ExtraBold,
             )
