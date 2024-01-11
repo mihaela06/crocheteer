@@ -38,14 +38,16 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
+import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.theme.Shapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier) {
+fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, navController: NavController) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -105,11 +107,12 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                             Spacer(modifier = modifier.height(5.dp))
                             yarnTypeWithColors.type.weight?.let { Text(text = it.name) }
                         }
+                        Spacer(modifier = modifier.height(15.dp))
                         IconButton(
                             modifier = modifier
                                 .alpha(0.5f)
                                 .weight(1f),
-                            onClick = {  }) {
+                            onClick = { navController.navigate(Screens.YarnDetailsScreen.name) }) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = "Yarn Details"
