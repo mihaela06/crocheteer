@@ -128,7 +128,7 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                     modifier = modifier
                         .weight(7f)
                         .padding(5.dp),
-                    text = "${yarnTypeWithColors.colors?.size.toString()} colors in stash"
+                    text = "${if (yarnTypeWithColors.colors == null) "0" else yarnTypeWithColors.colors.size.toString()} colors in stash"
                 )
                 IconButton(
                     modifier = modifier
@@ -253,12 +253,4 @@ fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
-
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ExpandableCardPreview() {
-//    ExpandableCard()
-//}
 
