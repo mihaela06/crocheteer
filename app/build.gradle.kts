@@ -75,6 +75,8 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
+    implementation("com.google.code.gson:gson:2.9.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.room:room-testing:$roomVersion")
 
@@ -88,5 +90,5 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
-    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }
