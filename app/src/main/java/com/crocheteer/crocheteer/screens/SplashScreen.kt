@@ -14,13 +14,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.crocheteer.crocheteer.R
+import com.crocheteer.crocheteer.navigation.Screens
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController){
     LaunchedEffect(key1 = true){
         delay(5000L)
-        navController.navigate("main_screen")
+        navController.navigate(Screens.MainScreen.name)
     }
     
     Column(

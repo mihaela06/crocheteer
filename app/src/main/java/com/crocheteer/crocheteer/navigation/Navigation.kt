@@ -6,20 +6,25 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.crocheteer.crocheteer.screens.YarnStash
 import com.crocheteer.crocheteer.screens.SplashScreen
+import com.crocheteer.crocheteer.screens.YarnDetailsScreen
 
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = "splash_screen"
+        startDestination = Screens.SplashScreen.name
     ){
-        composable("splash_screen"){
+        composable(Screens.SplashScreen.name){
             SplashScreen(navController = navController)
         }
 
-        composable("main_screen"){
+        composable(Screens.MainScreen.name){
             YarnStash(navController = navController)
+        }
+        
+        composable(Screens.YarnDetailsScreen.name){
+            YarnDetailsScreen(navController = navController)
         }
     }
 

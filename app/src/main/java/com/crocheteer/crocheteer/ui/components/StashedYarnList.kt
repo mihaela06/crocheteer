@@ -1,6 +1,5 @@
 package com.crocheteer.crocheteer.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -19,24 +19,25 @@ import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import com.crocheteer.crocheteer.ui.viewmodels.StashedYarnListViewModel
 
 @Composable
-fun StashedYarnList(modifier: Modifier = Modifier) {
+fun StashedYarnList(modifier: Modifier = Modifier, navController: NavController) {
     val viewModel = hiltViewModel<StashedYarnListViewModel>()
 
     val yarnStashPagingItems = viewModel.yarnStashPagingDataFlow().collectAsLazyPagingItems()
 
-    YarnStashContent(yarnStashPagingItems, modifier)
+    YarnStashContent(yarnStashPagingItems, modifier, navController)
 }
 
 @Composable
 fun YarnStashContent(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         if (yarnStashPagingItems.loadState.refresh is LoadState.Loading)
             CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
         else
-            YarnStashColumn(yarnStashPagingItems, modifier)
+            YarnStashColumn(yarnStashPagingItems, modifier, navController)
     }
 }
 
@@ -44,7 +45,8 @@ fun YarnStashContent(
 @Composable
 fun YarnStashColumn(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -55,7 +57,7 @@ fun YarnStashColumn(
             key = yarnStashPagingItems.itemKey { it.type.id },
         ) { index ->
             val stashedYarn = yarnStashPagingItems[index] ?: return@items
-            ExpandableCard()
+            ExpandableCard(stashedYarn, modifier, navController)
         }
         item {
             if (yarnStashPagingItems.loadState.append is LoadState.Loading) {

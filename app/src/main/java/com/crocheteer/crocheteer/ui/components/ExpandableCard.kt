@@ -18,11 +18,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,19 +36,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.crocheteer.crocheteer.R
+import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
+import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.theme.Shapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(modifier: Modifier = Modifier) {
+fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, navController: NavController) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandableState) 180f else 0f, label = ""
     )
+    val showColorDialog = remember { mutableStateOf(false) }
+    val imageUri = remember { mutableStateOf("") }
+    val colorCode = remember { mutableStateOf("") }
+    val colorName = remember { mutableStateOf("") }
+    val colorQuantity = remember { mutableStateOf("") }
+
 
     Card(
         modifier = modifier
@@ -63,7 +76,7 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
         },
 
 
-    ) {
+        ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -75,11 +88,12 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
             ) {
                 Box() {
                     Row {
-                        Image(
-                            painter = painterResource(id = R.mipmap.logo),
-                            contentDescription = "SplashScreenLogo",
-                            modifier = modifier.weight(1f)
-                        )
+                        yarnTypeWithColors.type.genericPhotoUrl?.let {
+                            DisplayImageFromUrl(
+                                imageUrl = it,
+                                modifier = modifier.weight(1f)
+                            )
+                        }
                         Column(
                             modifier = modifier
                                 .weight(2f)
@@ -87,11 +101,22 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
                                 .align(Alignment.CenterVertically),
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "text2")
+                            Text(text = yarnTypeWithColors.type.companyName)
                             Spacer(modifier = modifier.height(5.dp))
-                            Text(text = "text3")
+                            Text(text = yarnTypeWithColors.type.name)
                             Spacer(modifier = modifier.height(5.dp))
-                            Text(text = "text4")
+                            yarnTypeWithColors.type.weight?.let { Text(text = it.name) }
+                        }
+                        Spacer(modifier = modifier.height(15.dp))
+                        IconButton(
+                            modifier = modifier
+                                .alpha(0.5f)
+                                .weight(1f),
+                            onClick = { navController.navigate(Screens.YarnDetailsScreen.name) }) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Yarn Details"
+                            )
                         }
                     }
                 }
@@ -103,7 +128,7 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
                     modifier = modifier
                         .weight(7f)
                         .padding(5.dp),
-                    text = "text5"
+                    text = "${if (yarnTypeWithColors.colors == null) "0" else yarnTypeWithColors.colors.size.toString()} colors in stash"
                 )
                 IconButton(
                     modifier = modifier
@@ -121,7 +146,7 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
                         .alpha(0.5f)
                         .weight(1f)
                         .rotate(rotationState),
-                    onClick = { }) {
+                    onClick = { showColorDialog.value = true }) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Button"
@@ -130,43 +155,102 @@ fun ExpandableCard(modifier: Modifier = Modifier) {
             }
 
             if (expandableState) {
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Image(
-                        painter = painterResource(id = R.mipmap.logo),
-                        contentDescription = "SplashScreenLogo",
-                        modifier = modifier.size(width = 50.dp, height = 50.dp)
-                    )
-                    // Container for text 9 and 10 to keep them together
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "text9",
-                            modifier = modifier.padding(start = 5.dp))
-                        Spacer(modifier = modifier.width(8.dp))
-                        Text(text = "-")
-                        Spacer(modifier = modifier.width(8.dp))
-                        Text(text = "text10")
+                Column {
+                    yarnTypeWithColors.colors?.forEach {
+                        Row(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.mipmap.logo),
+                                contentDescription = "SplashScreenLogo",
+                                modifier = modifier.size(width = 50.dp, height = 50.dp)
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                it.colorCode?.let { it1 ->
+                                    Text(
+                                        text = it1,
+                                        modifier = modifier.padding(start = 5.dp)
+                                    )
+                                }
+                                Spacer(modifier = modifier.width(8.dp))
+                                Text(text = "-")
+                                Spacer(modifier = modifier.width(8.dp))
+                                Text(text = it.colorName)
+                            }
+                            Spacer(modifier = modifier.weight(1f))
+                            Text(text = "${it.quantity} g")
+                        }
                     }
-                    Spacer(modifier = modifier.weight(1f))
-                    Text(text = "text11")
+                }
+
+            }
+
+            if (showColorDialog.value) {
+                Dialog(onDismissRequest = { showColorDialog.value = false }) {
+                    Column(modifier = modifier.padding(16.dp)) {
+                        TextField(
+                            value = imageUri.value,
+                            onValueChange = { imageUri.value = it },
+                            label = { Text("Yarn Color Image URI") })
+
+                        TextField(
+                            value = colorCode.value,
+                            onValueChange = { colorCode.value = it },
+                            label = { Text("Text 9") }
+                        )
+                        TextField(
+                            value = colorName.value,
+                            onValueChange = { colorName.value = it },
+                            label = { Text("Text 10") }
+                        )
+                        TextField(
+                            value = colorQuantity.value,
+                            onValueChange = { colorQuantity.value = it },
+                            label = { Text("Text 11") }
+                        )
+                        Row (
+                            modifier = modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Button(onClick = {
+                                showColorDialog.value = false
+                                //add the data to database
+                            }) {
+                                Text("Add to List")
+                            }
+                            Spacer(modifier.weight(0.5f))
+                            Button(onClick = {
+                                showColorDialog.value = false
+                                //close dialog
+                            }) {
+                                Text("Cancel")
+                            }
+                        }
+
+                    }
+
                 }
             }
 
         }
-
-
     }
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun ExpandableCardPreview() {
-    ExpandableCard()
+fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
+    val painter = rememberImagePainter(data = imageUrl)
+
+    Image(
+        painter = painter,
+        contentDescription = "Loaded image from url",
+        modifier = modifier
+    )
 }
 
