@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.components.FloatingActionButton
 import com.crocheteer.crocheteer.ui.components.StashedYarnList
 import com.crocheteer.crocheteer.ui.components.TopBar
@@ -24,11 +25,11 @@ fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            TopBar("My Yarn Stash")
+            TopBar("My Yarn Stash", {})
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            FloatingActionButton()
+            FloatingActionButton(onClick = { navController.navigate(Screens.AddYarnScreen.name) })
         }
     ) {
         Box(

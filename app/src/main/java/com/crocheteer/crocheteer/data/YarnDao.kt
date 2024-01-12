@@ -15,23 +15,32 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface YarnDao {
-    @Query("SELECT * from yarn_types ORDER BY company_name, name ASC")
+    @Query("SELECT * FROM yarn_types ORDER BY company_name, name ASC")
     fun getAllYarnTypes(): Flow<List<YarnType>>
 
     @Transaction
-    @Query("SELECT * from yarn_types")
+    @Query("SELECT * FROM yarn_types")
     fun getAllYarnTypesWithColors(): Flow<List<YarnTypeWithColors>>
 
     @Transaction
-    @Query("SELECT * from yarn_types")
+    @Query("SELECT * FROM yarn_types")
     fun getAllYarnTypesWithColorsPagingSource(): PagingSource<Int, YarnTypeWithColors>
 
     @Transaction
     @Query("SELECT * from yarn_types WHERE id = :yarnTypeId")
     fun getYarnTypeWithColors(yarnTypeId: Long): Flow<YarnTypeWithColors>
 
-    @Query("SELECT * from yarn_types WHERE id = :id")
+    @Query("SELECT * FROM yarn_types WHERE id = :id")
     fun getYarnType(id: Long): Flow<YarnType>
+
+    @Query("SELECT DISTINCT company_name FROM yarn_types")
+    fun getCompanyNames(): Flow<List<String>>
+
+    @Query(
+        "SELECT DISTINCT company_name FROM yarn_types" +
+                " WHERE company_name LIKE '%' || :searchTerm || '%'"
+    )
+    fun getCompanyNames(searchTerm: String): Flow<List<String>>
 
     @Transaction
     @Query(
