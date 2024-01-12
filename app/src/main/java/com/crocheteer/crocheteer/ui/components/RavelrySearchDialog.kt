@@ -1,13 +1,11 @@
 package com.crocheteer.crocheteer.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -105,7 +102,7 @@ fun RavelrySearchDialog(
                     onSelect = {
                         yarnType = it
                     },
-                    modifier = modifier.fillMaxHeight()
+                    modifier = modifier
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
@@ -144,7 +141,7 @@ fun YarnList(
     onSelect: (YarnType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxHeight()) {
+    Box(modifier = modifier) {
         if (yarnPagingItems.loadState.refresh is LoadState.Loading)
             CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
         else
@@ -160,7 +157,8 @@ fun YarnColumn(
 ) {
     var isSelected by remember { mutableStateOf(mapOf<Int, Boolean>()) }
     LazyColumn(
-        modifier = modifier.fillMaxHeight(0.7f),
+//        modifier = modifier.height(300.dp),
+        modifier = modifier.fillMaxHeight(0.8f),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(
