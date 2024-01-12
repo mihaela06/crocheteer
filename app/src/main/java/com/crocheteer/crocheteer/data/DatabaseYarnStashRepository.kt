@@ -20,7 +20,10 @@ class DatabaseYarnStashRepository @Inject constructor(
     }
 
     override suspend fun updateStashedYarn(updatedYarn: YarnTypeWithColors) {
-        TODO("Not yet implemented")
+        yarnDao.update(updatedYarn.type)
+        if (updatedYarn.colors != null)
+            for (color in updatedYarn.colors)
+                if (color.id == 0L) yarnDao.insert(color) else yarnDao.update(color)
     }
 
     override suspend fun deleteStashedYarn(toDelYarn: YarnTypeWithColors) {

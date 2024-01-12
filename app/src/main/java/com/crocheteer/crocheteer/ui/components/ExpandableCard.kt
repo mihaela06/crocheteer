@@ -1,5 +1,6 @@
 package com.crocheteer.crocheteer.ui.components
 
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -12,10 +13,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -33,12 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.crocheteer.crocheteer.R
+import com.crocheteer.crocheteer.data.entities.YarnColor
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import com.crocheteer.crocheteer.ui.theme.Shapes
 
@@ -47,8 +50,9 @@ import com.crocheteer.crocheteer.ui.theme.Shapes
 @Composable
 fun ExpandableCard(
     yarnTypeWithColors: YarnTypeWithColors,
+    onNavigateToDetails: () -> Unit,
+    onAddYarnColor: (YarnColor) -> Unit,
     modifier: Modifier = Modifier,
-    onNavigate: () -> Unit
 ) {
 
     var expandableState by remember { mutableStateOf(false) }
@@ -56,11 +60,6 @@ fun ExpandableCard(
         targetValue = if (expandableState) 180f else 0f, label = ""
     )
     val showColorDialog = remember { mutableStateOf(false) }
-    val imageUri = remember { mutableStateOf("") }
-    val colorCode = remember { mutableStateOf("") }
-    val colorName = remember { mutableStateOf("") }
-    val colorQuantity = remember { mutableStateOf("") }
-
 
     Card(
         modifier = modifier
@@ -77,7 +76,6 @@ fun ExpandableCard(
             expandableState = !expandableState
         },
     ) {
-
 
         Column(
             modifier = modifier
@@ -96,13 +94,12 @@ fun ExpandableCard(
                     modifier = modifier
                         .alpha(0.5f)
                         .align(Alignment.CenterEnd),
-                    onClick = { onNavigate() }) {
+                    onClick = { onNavigateToDetails() }) {
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Yarn Details"
                     )
                 }
-
             }
 
             Row(
@@ -148,11 +145,25 @@ fun ExpandableCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Image(
-                                painter = painterResource(id = R.mipmap.logo),
-                                contentDescription = "SplashScreenLogo",
-                                modifier = modifier.size(width = 50.dp, height = 50.dp)
-                            )
+                            if (it.photoUri.isNullOrEmpty())
+                                Image(
+                                    painter = painterResource(id = R.drawable.placeholder),
+                                    contentDescription = "Placeholder",
+                                    modifier = modifier
+                                        .size(width = 50.dp, height = 50.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                )
+                            else
+                                AsyncImage(
+                                    model = Uri.parse(it.photoUri),
+                                    contentDescription = "Yarn color",
+                                    contentScale = ContentScale.Crop,
+                                    error = painterResource(id = R.drawable.placeholder),
+                                    modifier = modifier
+                                        .size(width = 50.dp, height = 50.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+
+                                )
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -177,13 +188,10 @@ fun ExpandableCard(
 
             if (showColorDialog.value) {
                 AddYarnColor(
+                    yarnTypeId = yarnTypeWithColors.type.id,
                     onDismiss = { showColorDialog.value = false },
+                    onAddToList = onAddYarnColor,
                     modifier = modifier,
-                    onAddToList = { },
-                    imageUri = imageUri.value,
-                    colorCode = colorCode.value,
-                    colorName = colorName.value,
-                    colorQuantity = colorQuantity.value
                 )
             }
         }
@@ -196,7 +204,8 @@ fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
     AsyncImage(
         model = imageUrl,
         contentDescription = "Loaded image from url",
-        modifier = modifier
+        error = painterResource(id = R.drawable.placeholder),
+        modifier = modifier.clip(RoundedCornerShape(10.dp))
     )
 }
 

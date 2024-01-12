@@ -17,22 +17,29 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.crocheteer.crocheteer.data.entities.YarnColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddYarnColor(
-    modifier: Modifier = Modifier,
+    yarnTypeId: Long,
     onDismiss: () -> Unit,
-    onAddToList: () -> Unit,
-    imageUri: String,
-    colorCode: String,
-    colorName: String,
-    colorQuantity: String
-    ) {
+    onAddToList: (YarnColor) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var imageUri by remember { mutableStateOf("") }
+    var colorCode by remember { mutableStateOf("") }
+    var colorName by remember { mutableStateOf("") }
+    var colorQuantity by remember { mutableStateOf("") }
+
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(
             shape = MaterialTheme.shapes.medium,
@@ -43,23 +50,11 @@ fun AddYarnColor(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Add New Yarn Color", style = MaterialTheme.typography.headlineSmall)
-                OutlinedTextField(
-                    value = imageUri,
-                    onValueChange = {},
-                    label = { Text("Yarn Color Image URI") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Create,
-                            contentDescription = null
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                ImagePicker(onUriChange = { imageUri = it.toString() })
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = colorCode,
-                    onValueChange = {},
+                    onValueChange = { colorCode = it },
                     label = { Text("Color Code") },
                     leadingIcon = {
                         Icon(
@@ -73,7 +68,7 @@ fun AddYarnColor(
 
                 OutlinedTextField(
                     value = colorName,
-                    onValueChange = {},
+                    onValueChange = { colorName = it },
                     label = { Text("Color Name") },
                     leadingIcon = {
                         Icon(
@@ -87,7 +82,7 @@ fun AddYarnColor(
 
                 OutlinedTextField(
                     value = colorQuantity,
-                    onValueChange = {},
+                    onValueChange = { colorQuantity = it },
                     label = { Text("Color Quantity") },
                     leadingIcon = {
                         Icon(
@@ -104,8 +99,15 @@ fun AddYarnColor(
                 ) {
                     Button(
                         onClick = {
-                            onAddToList()
-                            //add the data to database
+                            onAddToList(
+                                YarnColor(
+                                    yarnTypeId = yarnTypeId,
+                                    quantity = colorQuantity.toIntOrNull() ?: 0,
+                                    colorName = colorName,
+                                    colorCode = colorCode,
+                                    photoUri = imageUri
+                                )
+                            )
                         },
                         modifier = modifier.weight(1f)
                     ) {
