@@ -1,18 +1,20 @@
 package com.crocheteer.crocheteer.ui.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -20,9 +22,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -49,16 +52,16 @@ fun RavelrySearchDialog(
     modifier: Modifier = Modifier
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .fillMaxHeight(0.8f)
-                .padding(16.dp),
+        Surface(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 50.dp),
             shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surface,
+            shadowElevation = 8.dp
         ) {
             Column(
-                modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                modifier = modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 var searchTerm by rememberSaveable { mutableStateOf("") }
@@ -68,44 +71,40 @@ fun RavelrySearchDialog(
                 var yarnType by rememberSaveable {
                     mutableStateOf<YarnType?>(null)
                 }
-
+                Spacer(modifier = modifier.height(16.dp))
                 Row(modifier = modifier.fillMaxWidth()) {
-                    TextField(
+                    OutlinedTextField(
                         value = searchBarText,
                         onValueChange = { searchBarText = it },
-                        modifier = modifier.fillMaxWidth(0.8f)
+                        modifier = modifier.fillMaxWidth(),
+                        label = { Text("Enter your text to search") },
+                        singleLine = true,
+                        leadingIcon = {
+                            IconButton(
+                                onClick = { searchTerm = searchBarText.text }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Search,
+                                    contentDescription = "Search",
+                                )
+                            }
+                        }
                     )
-                    IconButton(
-                        onClick = {
-                            searchTerm = searchBarText.text
-                        },
-                        modifier = modifier.fillMaxWidth(0.2f)
-                    )
-                    {
-                        Icon(
-                            Icons.Filled.Search,
-                            contentDescription = "Search",
-                            modifier.fillMaxWidth()
-                        )
-                    }
                 }
                 YarnSearchList(
                     searchTerm = searchTerm,
                     onSelect = { yarnType = it },
                     modifier = modifier.fillMaxHeight(0.7f)
                 )
-                Row(
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {onConfirmation(yarnType!!)},
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    TextButton(
-                        onClick = { onConfirmation(yarnType!!) },
-                        modifier = Modifier.padding(8.dp),
-                        enabled = yarnType != null
-                    ) {
-                        Text("Confirm")
-                    }
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(50),
+                    enabled = yarnType != null
+                ){
+                    Text("Confirm", color = Color.White)
                 }
             }
         }
@@ -119,7 +118,7 @@ fun YarnSearchList(
     onSelect: (YarnType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (searchTerm == "") return Text("Enter your text to search")
+    if (searchTerm == "") return Text("")
 
     val viewModel = hiltViewModel<YarnSearchListViewModel>()
     val yarnPagingItems = viewModel.yarnSearchPagingDataFlow(searchTerm).collectAsLazyPagingItems()
@@ -157,6 +156,9 @@ fun YarnColumn(
         ) { index ->
             if (yarnPagingItems[index] == null) return@items
             val (yarn, _) = yarnPagingItems[index]!!
+
+
+
             Card(
                 modifier = modifier.clickable {
                     onSelect(yarn)
