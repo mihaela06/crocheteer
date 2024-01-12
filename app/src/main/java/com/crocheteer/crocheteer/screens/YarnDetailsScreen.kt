@@ -88,18 +88,12 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
         ) {
             Column(
                 modifier = modifier
-                    //.padding(paddingValues)
                     .padding(16.dp)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Row {
-//                        yarnTypeWithColors.type.genericPhotoUrl?.let {
-//                            DisplayImageFromUrl(
-//                                imageUrl = it,
-//                                modifier = modifier.weight(1f)
-//                            )
                     Image(
                         painter = painterResource(id = R.mipmap.logo),
                         contentDescription = "SplashScreenLogo",
@@ -114,14 +108,11 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
                             .align(Alignment.CenterVertically),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        //Text(text = yarnTypeWithColors.type.companyName)
                         Text(text = "companyName", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = modifier.height(16.dp))
-                        //Text(text = yarnTypeWithColors.type.name)
                         Text(text = "Name", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = modifier.height(16.dp))
                         Text(text = "Weight", style = MaterialTheme.typography.bodyLarge)
-                        //yarnTypeWithColors.type.weight?.let { Text(text = it.name) }
                     }
                     Spacer(modifier = modifier.height(15.dp))
                 }
@@ -151,12 +142,10 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            //it.colorCode?.let { it1 ->
                             Text(
                                 text = "Color code",
                                 modifier = modifier.padding(start = 5.dp)
                             )
-                            //}
                             Spacer(modifier = modifier.width(8.dp))
                             Text(text = "-")
                             Spacer(modifier = modifier.width(8.dp))
