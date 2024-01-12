@@ -1,5 +1,6 @@
 package com.crocheteer.crocheteer.screens
 
+import androidx.compose.material3.Switch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,12 +8,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -65,7 +69,7 @@ fun AddYarnScreen(
         Box(
             modifier = modifier
                 .padding(padding)
-                .background(Color.Transparent)
+                .background(Color.Transparent),
         ) {
             AddYarn(
                 stashYarn = {
@@ -93,13 +97,18 @@ fun AddYarn(
         mutableStateOf(false)
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .fillMaxWidth()) {
         Button(
             onClick = { isDialogVisible = true },
-            modifier = modifier
+            modifier = modifier.fillMaxWidth()
         ) {
             Text("Search on Ravelry")
         }
+        Spacer(modifier = modifier.height(16.dp))
         AddYarnForm(
             onAddClick = {
                 stashYarn(it)
@@ -169,7 +178,7 @@ fun AddYarnForm(
         isValid = false
     }
 
-    Column(modifier = modifier.padding(16.dp)) {
+    Column(modifier = modifier.padding(6.dp)) {
         AutoCompleteTextField(
             text = yarnCompanyName,
             onTextChange = {
@@ -177,52 +186,70 @@ fun AddYarnForm(
                 onGetCompanySuggestions(it)
             },
             suggestions = companySuggestions,
-            modifier = modifier,
+            modifier = modifier.fillMaxWidth(),
             label = "Company name"
         )
-        Spacer(modifier.size(10.dp))
-        TextField(
+        Spacer(modifier.height(16.dp))
+        OutlinedTextField(
             value = yarnName,
             onValueChange = { yarnName = it },
             label = { Text("Yarn name") },
-            isError = yarnName.isEmpty()
+            isError = yarnName.isEmpty(),
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true
         )
-        Spacer(modifier.size(10.dp))
+        Spacer(modifier.height(16.dp))
         YarnWeightDropdown(weight = yarnWeight, onWeightChange = { yarnWeight = it })
-        Spacer(modifier.size(10.dp))
-        TextField(
+        Spacer(modifier.height(16.dp))
+        OutlinedTextField(
             value = yarnGrams,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             onValueChange = { yarnGrams = it },
             isError = yarnGrams.toIntOrNull() == null || (yarnGrams.toInt() < 1),
-            label = { Text("Grams per skein") }
+            label = { Text("Grams per skein") },
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true
         )
-        TextField(
+        Spacer(modifier.height(16.dp))
+        OutlinedTextField(
             value = yarnLength,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             onValueChange = { yarnLength = it },
             isError = yarnLength.toIntOrNull() == null || (yarnLength.toInt() < 1),
-            label = { Text("Meters per skein") }
+            label = { Text("Meters per skein") },
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true
         )
-        TextField(
+        Spacer(modifier.height(16.dp))
+        OutlinedTextField(
             value = yarnPhotoUrl,
             onValueChange = { yarnPhotoUrl = it },
-            label = { Text("Photo URL (optional)") }
+            label = { Text("Photo URL (optional)") },
+            modifier = modifier.fillMaxWidth(),
+            singleLine = true
         )
         // TODO after valid URL is entered, render the image
-        Spacer(modifier.size(10.dp))
-        Row(modifier = modifier) {
-            Text("Is machine washable?", modifier)
-            Checkbox(
+        Spacer(modifier.height(16.dp))
+        Row(modifier = modifier.padding(6.dp),
+            verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Is machine washable?",
+                modifier = modifier,
+                )
+//            Checkbox(
+//                checked = yarnIsMachineWashable,
+//                onCheckedChange = { yarnIsMachineWashable = !yarnIsMachineWashable },
+//            )
+            Switch(
                 checked = yarnIsMachineWashable,
-                onCheckedChange = { yarnIsMachineWashable = !yarnIsMachineWashable },
+                onCheckedChange = { yarnIsMachineWashable = it },
             )
-            Spacer(modifier = modifier)
+//            Spacer(modifier = modifier)
         }
-        Spacer(modifier.weight(1f))
+        Spacer(modifier.height(16.dp))
         Button(
             modifier = modifier.align(Alignment.CenterHorizontally),
             enabled = isValid,
+            shape = RoundedCornerShape(50),
             onClick = {
                 onAddClick(YarnTypeWithColors(yarn, listOf()))
             }) {
