@@ -24,4 +24,8 @@ class StashedYarnListViewModel @Inject constructor(
             .flow
             .cachedIn(viewModelScope)
     }
+
+    suspend fun updateStashedYarn(yarnTypeWithColors: YarnTypeWithColors) =
+        yarnStashRepository.updateStashedYarn(yarnTypeWithColors)
+
 }

@@ -13,35 +13,43 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.components.CollapsibleSearchBar
 import com.crocheteer.crocheteer.ui.components.FloatingActionButton
 import com.crocheteer.crocheteer.ui.components.StashedYarnList
 import com.crocheteer.crocheteer.ui.components.TopBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
+fun YarnStash(
+    onNavigateToDetails: (Long) -> Unit,
+    onNavigateToYarnAdd: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var searchTerm by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopBar(text = "My Yarn Stash", actions = {
                 CollapsibleSearchBar(
-                    onSearchTermChange = { searchTerm = it },
+                    onSearchTermChange = {
+                        searchTerm = it
+                        keyboardController?.hide()
+                    },
                     modifier = modifier
                 )
             })
         },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screens.AddYarnScreen.name) })
+            FloatingActionButton(onClick = onNavigateToYarnAdd)
         }
     ) {
         Box(
@@ -51,7 +59,7 @@ fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
         ) {
             StashedYarnList(
                 searchTerm = searchTerm,
-                onNavigateToDetails = { navController.navigate(Screens.YarnDetailsScreen.name) },
+                onNavigateToDetails = onNavigateToDetails,
                 modifier = modifier
             )
         }
