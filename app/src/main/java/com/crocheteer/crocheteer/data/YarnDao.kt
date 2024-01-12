@@ -27,6 +27,16 @@ interface YarnDao {
     fun getAllYarnTypesWithColorsPagingSource(): PagingSource<Int, YarnTypeWithColors>
 
     @Transaction
+    @Query(
+        "SELECT * FROM yarn_types WHERE " +
+                "company_name LIKE '%' || :searchTerm || '%' OR " +
+                "name LIKE '%' || :searchTerm || '%' OR " +
+                "weight LIKE '%' || :searchTerm || '%' OR " +
+                "company_name LIKE '%' || :searchTerm || '%' COLLATE NOCASE"
+    )
+    fun getAllYarnTypesWithColorsPagingSource(searchTerm: String): PagingSource<Int, YarnTypeWithColors>
+
+    @Transaction
     @Query("SELECT * from yarn_types WHERE id = :yarnTypeId")
     fun getYarnTypeWithColors(yarnTypeId: Long): Flow<YarnTypeWithColors>
 

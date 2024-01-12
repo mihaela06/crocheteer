@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -19,12 +18,17 @@ import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import com.crocheteer.crocheteer.ui.viewmodels.StashedYarnListViewModel
 
 @Composable
-fun StashedYarnList(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
+fun StashedYarnList(
+    searchTerm: String,
+    onNavigateToDetails: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val viewModel = hiltViewModel<StashedYarnListViewModel>()
 
-    val yarnStashPagingItems = viewModel.yarnStashPagingDataFlow().collectAsLazyPagingItems()
+    val yarnStashPagingItems =
+        viewModel.yarnStashPagingDataFlow(searchTerm).collectAsLazyPagingItems()
 
-    YarnStashContent(yarnStashPagingItems, modifier, onNavigate)
+    YarnStashContent(yarnStashPagingItems, modifier, onNavigateToDetails)
 }
 
 @Composable
