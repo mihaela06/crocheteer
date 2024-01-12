@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
@@ -202,17 +203,17 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                         TextField(
                             value = colorCode.value,
                             onValueChange = { colorCode.value = it },
-                            label = { Text("Text 9") }
+                            label = { Text("Color Code") }
                         )
                         TextField(
                             value = colorName.value,
                             onValueChange = { colorName.value = it },
-                            label = { Text("Text 10") }
+                            label = { Text("Color Name") }
                         )
                         TextField(
                             value = colorQuantity.value,
                             onValueChange = { colorQuantity.value = it },
-                            label = { Text("Text 11") }
+                            label = { Text("Color Quantity") }
                         )
                         Row (
                             modifier = modifier.fillMaxWidth(),
@@ -227,7 +228,6 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                             Spacer(modifier.weight(0.5f))
                             Button(onClick = {
                                 showColorDialog.value = false
-                                //close dialog
                             }) {
                                 Text("Cancel")
                             }
@@ -245,7 +245,7 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
 
 @Composable
 fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
-    val painter = rememberImagePainter(data = imageUrl)
+    val painter = rememberAsyncImagePainter(model = imageUrl)
 
     Image(
         painter = painter,
