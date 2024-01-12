@@ -25,7 +25,7 @@ fun Navigation(){
         }
 
         composable(Screens.YarnDetailsScreen.name) {
-            YarnDetailsScreen(navController = navController)
+            YarnDetailsScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(
