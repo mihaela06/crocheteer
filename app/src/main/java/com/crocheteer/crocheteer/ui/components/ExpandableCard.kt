@@ -48,7 +48,7 @@ import com.crocheteer.crocheteer.ui.theme.Shapes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, navController: NavController) {
+fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, onNavigate: () -> Unit) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -113,7 +113,7 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                             modifier = modifier
                                 .alpha(0.5f)
                                 .weight(1f),
-                            onClick = { navController.navigate(Screens.YarnDetailsScreen.name) }) {
+                            onClick = { onNavigate() }) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = "Yarn Details"
