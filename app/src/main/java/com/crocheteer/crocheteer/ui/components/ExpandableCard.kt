@@ -19,13 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,18 +35,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
-import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.theme.Shapes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, onNavigate: () -> Unit) {
+fun ExpandableCard(
+    yarnTypeWithColors: YarnTypeWithColors,
+    modifier: Modifier = Modifier,
+    onNavigate: () -> Unit
+) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -193,50 +192,111 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
             }
 
             if (showColorDialog.value) {
-                Dialog(onDismissRequest = { showColorDialog.value = false }) {
-                    Column(modifier = modifier.padding(16.dp)) {
-                        TextField(
-                            value = imageUri.value,
-                            onValueChange = { imageUri.value = it },
-                            label = { Text("Yarn Color Image URI") })
-
-                        TextField(
-                            value = colorCode.value,
-                            onValueChange = { colorCode.value = it },
-                            label = { Text("Color Code") }
-                        )
-                        TextField(
-                            value = colorName.value,
-                            onValueChange = { colorName.value = it },
-                            label = { Text("Color Name") }
-                        )
-                        TextField(
-                            value = colorQuantity.value,
-                            onValueChange = { colorQuantity.value = it },
-                            label = { Text("Color Quantity") }
-                        )
-                        Row (
-                            modifier = modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Button(onClick = {
-                                showColorDialog.value = false
-                                //add the data to database
-                            }) {
-                                Text("Add to List")
-                            }
-                            Spacer(modifier.weight(0.5f))
-                            Button(onClick = {
-                                showColorDialog.value = false
-                            }) {
-                                Text("Cancel")
-                            }
-                        }
-
-                    }
-
-                }
+                AddYarnColor(
+                    onDismiss = { showColorDialog.value = false },
+                    modifier = modifier,
+                    onAddToList = { },
+                    imageUri = imageUri.value,
+                    colorCode = colorCode.value,
+                    colorName = colorName.value,
+                    colorQuantity = colorQuantity.value)
             }
+//                Dialog(onDismissRequest = { showColorDialog.value = false }) {
+//                    Surface(
+//                        shape = MaterialTheme.shapes.medium,
+//                    ) {
+//                        Column(
+//                            modifier = modifier
+//                                .padding(16.dp)
+//                                .fillMaxWidth(),
+//                            horizontalAlignment = Alignment.CenterHorizontally
+//                        ) {
+//                            Text("Add New Yarn", style = MaterialTheme.typography.headlineSmall)
+//                            OutlinedTextField(
+//                                value = imageUri.value,
+//                                onValueChange = {},
+//                                label = { Text("Yarn Color Image URI") },
+//                                leadingIcon = {
+//                                    Icon(
+//                                        imageVector = Icons.Default.Create,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                            Spacer(modifier = Modifier.height(8.dp))
+//                            OutlinedTextField(
+//                                value = colorCode.value,
+//                                onValueChange = {},
+//                                label = { Text("Color Code") },
+//                                leadingIcon = {
+//                                    Icon(
+//                                        Icons.Default.Create,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                            Spacer(modifier = Modifier.height(8.dp))
+//
+//                            OutlinedTextField(
+//                                value = colorName.value,
+//                                onValueChange = {},
+//                                label = { Text("Color Name") },
+//                                leadingIcon = {
+//                                    Icon(
+//                                        Icons.Default.Create,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                            Spacer(modifier = Modifier.height(8.dp))
+//
+//                            OutlinedTextField(
+//                                value = colorQuantity.value,
+//                                onValueChange = {},
+//                                label = { Text("Color Quantity") },
+//                                leadingIcon = {
+//                                    Icon(
+//                                        Icons.Default.Create,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+//                            Spacer(modifier = Modifier.height(16.dp))
+//                            Row(
+//                                modifier = modifier.fillMaxWidth(),
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                Button(
+//                                    onClick = {
+//                                        showColorDialog.value = false
+//                                        //add the data to database
+//                                    },
+//                                    modifier = modifier.weight(1f)
+//                                ) {
+//                                    Text("Add to List")
+//                                }
+//                                Spacer(modifier.width(8.dp))
+//                                Button(
+//                                    onClick = {
+//                                        showColorDialog.value = false
+//                                    },
+//                                    modifier = modifier.weight(1f)
+//                                ) {
+//                                    Text("Cancel")
+//                                }
+//                            }
+//
+//                        }
+//
+//                    }
+//
+//
+//                }
+//            }
 
         }
     }
