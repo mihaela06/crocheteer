@@ -8,4 +8,5 @@ interface YarnStashRepository {
     suspend fun addStashedYarn(newYarn: YarnTypeWithColors)
     suspend fun updateStashedYarn(updatedYarn: YarnTypeWithColors)
     suspend fun deleteStashedYarn(toDelYarn: YarnTypeWithColors)
+    suspend fun getCompanyName(searchTerm: String): List<String>
 }

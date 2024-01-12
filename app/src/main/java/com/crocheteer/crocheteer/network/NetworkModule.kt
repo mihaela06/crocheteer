@@ -25,6 +25,11 @@ class NetworkModule {
             context.getString(R.string.ravelry_password),
         )
 
+    @Provides
+    @Singleton
+    fun provideRavelrySearchRepository(@ApplicationContext context: Context)
+            : YarnSearchRepository = RavelryYarnSearchRepository(provideRavelryApiService(context))
+
     companion object {
         private const val ravelryApiUrl = "https://api.ravelry.com/"
 
