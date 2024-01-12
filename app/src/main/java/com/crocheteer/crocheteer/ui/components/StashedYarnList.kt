@@ -19,25 +19,25 @@ import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import com.crocheteer.crocheteer.ui.viewmodels.StashedYarnListViewModel
 
 @Composable
-fun StashedYarnList(modifier: Modifier = Modifier, navController: NavController) {
+fun StashedYarnList(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
     val viewModel = hiltViewModel<StashedYarnListViewModel>()
 
     val yarnStashPagingItems = viewModel.yarnStashPagingDataFlow().collectAsLazyPagingItems()
 
-    YarnStashContent(yarnStashPagingItems, modifier, navController)
+    YarnStashContent(yarnStashPagingItems, modifier, onNavigate)
 }
 
 @Composable
 fun YarnStashContent(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
     modifier: Modifier = Modifier,
-    navController: NavController
+    onNavigate: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         if (yarnStashPagingItems.loadState.refresh is LoadState.Loading)
             CircularProgressIndicator(modifier = modifier.align(Alignment.Center))
         else
-            YarnStashColumn(yarnStashPagingItems, modifier, navController)
+            YarnStashColumn(yarnStashPagingItems, modifier, onNavigate)
     }
 }
 
@@ -46,7 +46,7 @@ fun YarnStashContent(
 fun YarnStashColumn(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
     modifier: Modifier = Modifier,
-    navController: NavController
+    onNavigate: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -57,7 +57,7 @@ fun YarnStashColumn(
             key = yarnStashPagingItems.itemKey { it.type.id },
         ) { index ->
             val stashedYarn = yarnStashPagingItems[index] ?: return@items
-            ExpandableCard(stashedYarn, modifier, navController)
+            ExpandableCard(stashedYarn, modifier, onNavigate)
         }
         item {
             if (yarnStashPagingItems.loadState.append is LoadState.Loading) {

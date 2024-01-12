@@ -37,7 +37,9 @@ fun YarnStash(navController: NavController, modifier: Modifier = Modifier) {
                 .padding(top = 100.dp)
                 .background(Color.Transparent)
         ) {
-            StashedYarnList(modifier, navController)
+            StashedYarnList(
+                modifier,
+                onNavigate = { navController.navigate(Screens.YarnDetailsScreen.name) })
         }
     }
 }

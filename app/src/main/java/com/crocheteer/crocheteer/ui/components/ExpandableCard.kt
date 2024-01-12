@@ -19,13 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,17 +35,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
-import com.crocheteer.crocheteer.navigation.Screens
 import com.crocheteer.crocheteer.ui.theme.Shapes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = Modifier, navController: NavController) {
+fun ExpandableCard(
+    yarnTypeWithColors: YarnTypeWithColors,
+    modifier: Modifier = Modifier,
+    onNavigate: () -> Unit
+) {
 
     var expandableState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -112,7 +112,7 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
                             modifier = modifier
                                 .alpha(0.5f)
                                 .weight(1f),
-                            onClick = { navController.navigate(Screens.YarnDetailsScreen.name) }) {
+                            onClick = { onNavigate() }) {
                             Icon(
                                 imageVector = Icons.Default.Info,
                                 contentDescription = "Yarn Details"
@@ -192,52 +192,15 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
             }
 
             if (showColorDialog.value) {
-                Dialog(onDismissRequest = { showColorDialog.value = false }) {
-                    Column(modifier = modifier.padding(16.dp)) {
-                        TextField(
-                            value = imageUri.value,
-                            onValueChange = { imageUri.value = it },
-                            label = { Text("Yarn Color Image URI") })
-
-                        TextField(
-                            value = colorCode.value,
-                            onValueChange = { colorCode.value = it },
-                            label = { Text("Text 9") }
-                        )
-                        TextField(
-                            value = colorName.value,
-                            onValueChange = { colorName.value = it },
-                            label = { Text("Text 10") }
-                        )
-                        TextField(
-                            value = colorQuantity.value,
-                            onValueChange = { colorQuantity.value = it },
-                            label = { Text("Text 11") }
-                        )
-                        Row (
-                            modifier = modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Button(onClick = {
-                                showColorDialog.value = false
-                                //add the data to database
-                            }) {
-                                Text("Add to List")
-                            }
-                            Spacer(modifier.weight(0.5f))
-                            Button(onClick = {
-                                showColorDialog.value = false
-                                //close dialog
-                            }) {
-                                Text("Cancel")
-                            }
-                        }
-
-                    }
-
-                }
+                AddYarnColor(
+                    onDismiss = { showColorDialog.value = false },
+                    modifier = modifier,
+                    onAddToList = { },
+                    imageUri = imageUri.value,
+                    colorCode = colorCode.value,
+                    colorName = colorName.value,
+                    colorQuantity = colorQuantity.value)
             }
-
         }
     }
 }
@@ -245,7 +208,7 @@ fun ExpandableCard(yarnTypeWithColors: YarnTypeWithColors, modifier: Modifier = 
 
 @Composable
 fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
-    val painter = rememberImagePainter(data = imageUrl)
+    val painter = rememberAsyncImagePainter(model = imageUrl)
 
     Image(
         painter = painter,
