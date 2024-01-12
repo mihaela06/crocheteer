@@ -27,7 +27,7 @@ import java.util.UUID.randomUUID
 @Composable
 fun StashedYarnList(
     searchTerm: String,
-    onNavigateToDetails: () -> Unit,
+    onNavigateToDetails: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -49,7 +49,7 @@ fun StashedYarnList(
 @Composable
 fun YarnStashContent(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
-    onNavigateToDetails: () -> Unit,
+    onNavigateToDetails: (Long) -> Unit,
     onUpdateStashedYarn: (YarnTypeWithColors) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -71,7 +71,7 @@ fun YarnStashContent(
 @Composable
 fun YarnStashColumn(
     yarnStashPagingItems: LazyPagingItems<YarnTypeWithColors>,
-    onNavigateToDetails: () -> Unit,
+    onNavigateToDetails: (Long) -> Unit,
     onUpdateStashedYarn: (YarnTypeWithColors) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,7 +99,7 @@ fun YarnStashColumn(
             val stashedYarn = yarnStashPagingItems[index] ?: return@items
             ExpandableCard(
                 yarnTypeWithColors = stashedYarn,
-                onNavigateToDetails = onNavigateToDetails,
+                onNavigateToDetails = { onNavigateToDetails(stashedYarn.type.id) },
                 onAddYarnColor = {
                     var toAddYarn = it
                     if (!it.photoUri.isNullOrEmpty()) {

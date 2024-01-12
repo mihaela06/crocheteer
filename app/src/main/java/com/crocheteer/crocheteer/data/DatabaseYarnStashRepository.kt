@@ -1,7 +1,10 @@
 package com.crocheteer.crocheteer.data
 
 import androidx.paging.PagingSource
+import com.crocheteer.crocheteer.data.entities.YarnType
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class DatabaseYarnStashRepository @Inject constructor(
@@ -19,6 +22,10 @@ class DatabaseYarnStashRepository @Inject constructor(
             for (color in newYarn.colors) yarnDao.insert(color)
     }
 
+    override suspend fun getStashedYarn(id: Long): Flow<YarnTypeWithColors> {
+        return yarnDao.getYarnTypeWithColors(id)
+    }
+
     override suspend fun updateStashedYarn(updatedYarn: YarnTypeWithColors) {
         yarnDao.update(updatedYarn.type)
         if (updatedYarn.colors != null)
@@ -26,8 +33,8 @@ class DatabaseYarnStashRepository @Inject constructor(
                 if (color.id == 0L) yarnDao.insert(color) else yarnDao.update(color)
     }
 
-    override suspend fun deleteStashedYarn(toDelYarn: YarnTypeWithColors) {
-        TODO("Not yet implemented")
+    override suspend fun deleteStashedYarn(yarnType: YarnType) {
+        yarnDao.delete(yarnType)
     }
 
     override suspend fun getCompanyName(searchTerm: String): List<String> {
