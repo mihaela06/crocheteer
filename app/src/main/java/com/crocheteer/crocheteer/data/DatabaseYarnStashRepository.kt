@@ -1,12 +1,18 @@
 package com.crocheteer.crocheteer.data
 
+import androidx.paging.PagingSource
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import javax.inject.Inject
 
 class DatabaseYarnStashRepository @Inject constructor(
     private val yarnDao: YarnDao
 ) : YarnStashRepository {
-    override val yarnStashPagingSource = yarnDao.getAllYarnTypesWithColorsPagingSource()
+    override fun yarnStashPagingSource(searchTerm: String): PagingSource<Int, YarnTypeWithColors> {
+        if (searchTerm.isNotEmpty())
+            return yarnDao.getAllYarnTypesWithColorsPagingSource(searchTerm)
+        return yarnDao.getAllYarnTypesWithColorsPagingSource()
+    }
+
     override suspend fun addStashedYarn(newYarn: YarnTypeWithColors) {
         yarnDao.insert(newYarn.type)
         if (newYarn.colors != null)

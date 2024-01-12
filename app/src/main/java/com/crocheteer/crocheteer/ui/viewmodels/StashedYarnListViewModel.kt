@@ -16,10 +16,10 @@ import javax.inject.Inject
 class StashedYarnListViewModel @Inject constructor(
     private val yarnStashRepository: YarnStashRepository
 ) : ViewModel() {
-    fun yarnStashPagingDataFlow(): Flow<PagingData<YarnTypeWithColors>> {
+    fun yarnStashPagingDataFlow(searchTerm: String): Flow<PagingData<YarnTypeWithColors>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { yarnStashRepository.yarnStashPagingSource }
+            pagingSourceFactory = { yarnStashRepository.yarnStashPagingSource(searchTerm) }
         )
             .flow
             .cachedIn(viewModelScope)
