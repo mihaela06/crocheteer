@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -28,15 +29,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
 import com.crocheteer.crocheteer.ui.components.DisplayImageFromUrl
@@ -47,6 +55,9 @@ import com.crocheteer.crocheteer.ui.components.TopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -60,7 +71,11 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
                     IconButton(onClick = { onEditClicked() }) {
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
                     }
-                    IconButton(onClick = { onDeleteClicked() }) {
+                    IconButton(onClick = {
+                        onDeleteClicked()
+                        showDeleteDialog = true
+                    }) {
+
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                     }
                 })
@@ -88,7 +103,9 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
                     Image(
                         painter = painterResource(id = R.mipmap.logo),
                         contentDescription = "SplashScreenLogo",
-                        modifier = modifier.weight(1f).size(150.dp)
+                        modifier = modifier
+                            .weight(1f)
+                            .size(150.dp)
                     )
                     Column(
                         modifier = modifier
@@ -155,6 +172,12 @@ fun YarnDetailsScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier)
         }
 
     }
+
+    if (showDeleteDialog) {
+        DeleteDialog(
+            onDismiss = { showDeleteDialog = false },
+            onDelete = { showDeleteDialog = false })
+    }
 }
 
 
@@ -164,19 +187,27 @@ fun DetailItem(label: String, value: String) {
         modifier = Modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp), // Rounded corners
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Elevation for a subtle shadow
+        shape = RoundedCornerShape(10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceVariant) // Use MaterialTheme for color scheme
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(text = value, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -184,9 +215,52 @@ fun DetailItem(label: String, value: String) {
 fun onEditClicked() {
 
 
-
 }
 
 fun onDeleteClicked() {
 
+}
+
+@Composable
+fun DeleteDialog(onDismiss: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+    Dialog(onDismissRequest = { onDismiss() }) {
+        Surface(
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Column(
+                modifier = modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Are you sure you want to delete this yarn?",
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = modifier.height(16.dp))
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        onClick = {
+                            onDelete()
+                        },
+                        modifier = modifier.weight(1f)
+                    ) {
+                        Text("Delete")
+                    }
+                    Spacer(modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            onDismiss()
+                        },
+                        modifier = modifier.weight(1f)
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            }
+        }
+    }
 }
