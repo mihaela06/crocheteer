@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.crocheteer.crocheteer.R
 import com.crocheteer.crocheteer.data.entities.YarnTypeWithColors
@@ -74,53 +76,35 @@ fun ExpandableCard(
         onClick = {
             expandableState = !expandableState
         },
+    ) {
 
 
-        ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
+
+            Box(
+                modifier = modifier.fillMaxWidth()
             ) {
-                Box() {
-                    Row {
-                        yarnTypeWithColors.type.genericPhotoUrl?.let {
-                            DisplayImageFromUrl(
-                                imageUrl = it,
-                                modifier = modifier.weight(1f)
-                            )
-                        }
-                        Column(
-                            modifier = modifier
-                                .weight(2f)
-                                .padding(5.dp)
-                                .align(Alignment.CenterVertically),
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(text = yarnTypeWithColors.type.companyName)
-                            Spacer(modifier = modifier.height(5.dp))
-                            Text(text = yarnTypeWithColors.type.name)
-                            Spacer(modifier = modifier.height(5.dp))
-                            yarnTypeWithColors.type.weight?.let { Text(text = it.name) }
-                        }
-                        Spacer(modifier = modifier.height(15.dp))
-                        IconButton(
-                            modifier = modifier
-                                .alpha(0.5f)
-                                .weight(1f),
-                            onClick = { onNavigate() }) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = "Yarn Details"
-                            )
-                        }
-                    }
+                YarnMainInfo(
+                    yarnType = yarnTypeWithColors.type,
+                    modifier = modifier.align(Alignment.CenterStart)
+                )
+                IconButton(
+                    modifier = modifier
+                        .alpha(0.5f)
+                        .align(Alignment.CenterEnd),
+                    onClick = { onNavigate() }) {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Yarn Details"
+                    )
                 }
+
             }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -199,7 +183,8 @@ fun ExpandableCard(
                     imageUri = imageUri.value,
                     colorCode = colorCode.value,
                     colorName = colorName.value,
-                    colorQuantity = colorQuantity.value)
+                    colorQuantity = colorQuantity.value
+                )
             }
         }
     }
@@ -208,10 +193,8 @@ fun ExpandableCard(
 
 @Composable
 fun DisplayImageFromUrl(imageUrl: String, modifier: Modifier = Modifier) {
-    val painter = rememberAsyncImagePainter(model = imageUrl)
-
-    Image(
-        painter = painter,
+    AsyncImage(
+        model = imageUrl,
         contentDescription = "Loaded image from url",
         modifier = modifier
     )
